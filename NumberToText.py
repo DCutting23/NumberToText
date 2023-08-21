@@ -12,35 +12,37 @@ if __name__ == "__main__":
             print ("is digit")
             break
         else:
-            print("please enter an integer")
-    print (number)
+            print("please enter a positive integer")
+    #print (number)
     number_array = []
     for char in number:
         number_array.append(char)
     number_int = int(number)
 
-    print(number_array)
+    #print(number_array)
     
     if (number_int < 10):
-        print("in range 0 to 9")
+        #print("in range 0 to 9")
         number_text = d0to9.get(number)
         print(number_text)
 
     elif (9 < number_int < 20):
-        print("in range 10 to 19")
+        #print("in range 10 to 19")
         number_text = d10to19.get(number_array[1])
+
         print(number_text)
 
     elif(19 < number_int < 100):
-        print("in range 20 to 99")
+        #print("in range 20 to 99")
         if (number_int % 10 == 0):
             number_text = d10s.get(number_array[0])
         else:
             number_text = d10s.get(number_array[0]) + " " + d0to9.get(number_array[1])
+
         print(number_text)
 
     elif(99 < number_int < 1000):
-        print("in range 100 to 999")
+        #print("in range 100 to 999")
         if (number_int % 100 == 0):
             number_text = d0to9.get(number_array[0]) + " hundred"
         elif (number_int % 100 < 10):
@@ -52,8 +54,17 @@ if __name__ == "__main__":
         else:
             number_text = d0to9.get(number_array[0]) + " hundred and " + d10s.get(number_array[1]) + " " + d0to9.get(number_array[2])
 
-
         print(number_text)
+    elif (999 < number_int < 1000000):
+        print("in progress")
+        print("in range 1000 to 999,999")
+        number_length = len(number_array)
+        last_3 = [number_array[number_length-3],number_array[number_length-2],number_array[number_length-1]]
+        print(last_3)
+        thousands = []
+        for i in range(0, number_length-3):
+            thousands.append(number_array[i])
+        print(thousands)
 
 
     else:
