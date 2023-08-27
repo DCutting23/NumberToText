@@ -5,40 +5,79 @@ d10to19 = {"1":"eleven", "2":"twelve", "3":"thirteen", "4":"fourteen", "5":"fift
 d10s = { "1":"ten", "2":"twenty", "3":"thirty", "4":"fourty", "5":"fifty", "6":"sixty", "7":"seventy", "8":"eighty", "9":"ninety"}
 noPlaces = {}
 
+def slz(digits):
+    i = 0
+    while(i < len(digits)):
+        if (digits[i] == "0"):
+            digits.pop(i)
+            i-=1
+        else:
+            break
+        i += 1
+    return digits
 def last_digit(digits):
     #takes single digit, returns 0 to 9 value
-    return d0to9[digits]
+    return d0to9[digits[0]]
 
 def tens_and_teens(digits):
     #takes two digits in array
     #determines if last two digits are between 11 and 19, returns value in teens or 10s value if not
-    num = int(digits[0] + digits[1])
-    if (10 < num < 20):
-        return d10to19[str(digits[1])]
-    elif (num%10 == 0):
-        return d10s[digits[0]]
-    else:
-        return d10s[digits[0]] + " " + last_digit(digits[1])
-
-def hundreds(digits):
-    #takes 3 digits in array
-    #gives value from hundreds place downwards
-    num = int(digits[0] + digits[1] + digits[2])
-    if(num%100 == 0):
-        return d0to9[digits[0]] + " hundred"
-    else:
-        return d0to9[digits[0]] + " hundred and " + tens_and_teens(digits[1:len(digits)])
-
-def thousands(digits):
-    #takes 4 to 6 digits in array
-    #gives value from thousands place downwards
     num_str = ""
     for digit in digits:
         num_str += digit
     num = int(num_str)
+    if (num < 10):
+        print("passing down")
+        return last_digit(slz(digits))
+    else:
+        if (10 < num < 20):
+            return d10to19[str(digits[1])]
+        elif (num%10 == 0):
+            return d10s[digits[0]]
+        else:
+            return d10s[digits[0]] + " " + last_digit(digits[1])
+
+def hundreds(digits):
+    #takes 3 digits in array
+    #gives value from hundreds place downwards
+    num_str = ""
+    for digit in digits:
+        num_str += digit
+    num = int(num_str)
+    if (num < 100):
+        print("passing down")
+        return tens_and_teens(slz(digits))
+    else:
+        if(num%100 == 0):
+            return d0to9[digits[0]] + " hundred"
+        else:
+            return d0to9[digits[0]] + " hundred and " + tens_and_teens(digits[1:len(digits)])
+
+def thousands(digits):
+    #takes 4 to 6 digits in array
+    #gives value from thousands place downwards
+    thousands_digits = []
     thousands_str = ""
-    if (num%1000 == 0):
-        return
+    for i in range(len(digits)-3):
+        thousands_digits.append(digits[i])
+    for digit in thousands_digits:
+        thousands_str += digit
+    thousands_num = int(thousands_str)
+    
+    hundreds_digits = []
+    hundreds_str = ""
+    for i in range(len(digits)-3, len(digits)):
+        hundreds_digits.append(digits[i])
+    for digit in hundreds_digits:
+        hundreds_str += digit
+    hundreds_num = int(hundreds_str)
+
+    if (hundreds_num == 0):
+        return hundreds(thousands_digits) + " thousand"
+    else:
+        return hundreds(thousands_digits) + " thousand " + hundreds(hundreds_digits)
+
+    
 
 """
 def millions():
@@ -71,66 +110,13 @@ if __name__ == "__main__":
             break
         i += 1
 
-    """
-    #print(number_array)
-    
-    if (number_int < 10):
-        #print("in range 0 to 9")
-        number_text = d0to9.get(number)
-        print(number_text)
-
-    elif (9 < number_int < 20):
-        #print("in range 10 to 19")
-        number_text = d10to19.get(number_array[1])
-
-        print(number_text)
-
-    elif(19 < number_int < 100):
-        #print("in range 20 to 99")
-        if (number_int % 10 == 0):
-            number_text = d10s.get(number_array[0])
-        else:
-            number_text = d10s.get(number_array[0]) + " " + d0to9.get(number_array[1])
-
-        print(number_text)
-
-    elif(99 < number_int < 1000):
-        #print("in range 100 to 999")
-        if (number_int % 100 == 0):
-            number_text = d0to9.get(number_array[0]) + " hundred"
-        elif (number_int % 100 < 10):
-            number_text = d0to9.get(number_array[0]) + " hundred and " + d0to9.get(number_array[2])
-        elif (9 < number_int%100 < 20):
-            number_text = d0to9.get(number_array[0]) + " hundred and " + d10to19.get(number_array[2])
-        elif ((number_int%100)%10 == 0):
-            number_text = d0to9.get(number_array[0]) + " hundred and " + d10s.get(number_array[1])
-        else:
-            number_text = d0to9.get(number_array[0]) + " hundred and " + d10s.get(number_array[1]) + " " + d0to9.get(number_array[2])
-
-        print(number_text)
-    elif (999 < number_int < 1000000):
-        print("in progress")
-        print("in range 1000 to 999,999")
-        number_length = len(number_array)
-        last_3 = [number_array[number_length-3],number_array[number_length-2],number_array[number_length-1]]
-        print(last_3)
-        thousands = []
-        for i in range(0, number_length-3):
-            thousands.append(number_array[i])
-        print(thousands)
-
-
+    if (len(number_array) < 2): #checks for number in 0 to 9 range
+        print(last_digit(number_array[0]))
+    elif(len(number_array) < 3): #checks for number in 10 to 99 range
+        print(tens_and_teens(number_array))
+    elif(len(number_array) < 4): #checks for number in 100 to 999 range
+        print(hundreds(number_array))
+    elif(len(number_array) < 7): #checks for number in 1000 to 999 999 range
+        print(thousands(number_array))
     else:
-        print("out of range")
-"""
-
-if (len(number_array) < 2): #checks for number in 0 to 9 range
-    print(last_digit(number_array[0]))
-elif(len(number_array) < 3): #checks for number in 10 to 99 range
-    print(tens_and_teens(number_array))
-elif(len(number_array) < 4): #checks for number in 100 to 999 range
-    print(hundreds(number_array))
-elif(len(number_array) < 7): #checks for number in 1000 to 999 999 range
-    print(thousands(number_array))
-else:
-    print("hit else")
+        print("hit else")
