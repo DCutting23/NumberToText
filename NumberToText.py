@@ -26,12 +26,11 @@ def last_digit(digits):
     return d0to9[digits[0]]
 
 def tens_and_teens(digits):
-    #takes two digits in array
+    #takes two digits in a list
     #determines if last two digits are between 11 and 19, returns value in teens or 10s value if not
     num = numint(digits)
 
     if (num < 10):
-        print("passing down")
         return last_digit(slz(digits))
     else:
         if (10 < num < 20):
@@ -42,12 +41,11 @@ def tens_and_teens(digits):
             return d10s[digits[0]] + " " + last_digit(digits[1])
 
 def hundreds(digits):
-    #takes 3 digits in array
+    #takes 3 digits in a list
     #gives value from hundreds place downwards
     num = numint(digits)
 
     if (num < 100):
-        print("passing down")
         return tens_and_teens(slz(digits))
     else:
         if(num%100 == 0):
@@ -56,12 +54,11 @@ def hundreds(digits):
             return d0to9[digits[0]] + " hundred and " + tens_and_teens(digits[1:len(digits)])
 
 def thousands(digits):
-    #takes 4 to 6 digits in array
+    #takes 4 to 6 digits in a list
     #gives value from thousands place downwards
     num = numint(digits)
 
     if (num < 1000):
-        print("passing down")
         return hundreds(slz(digits))
     else:
         thousands_digits = []
@@ -82,10 +79,10 @@ def thousands(digits):
             return hundreds(thousands_digits) + " thousand " + hundreds(hundreds_digits)
 
 def millions(digits):
+    #takes 7 to 10 digits in a list
     #gives value from millions place downwards
     num = numint(digits)
     if (num < 1000000):
-        print("passing down")
         return thousands(slz(digits))
     else:
         millions_digits = []
@@ -121,15 +118,7 @@ if __name__ == "__main__":
 
     number_array = slz(number_array)
 
-    if (len(number_array) < 2): #checks for number in 0 to 9 range
-        print(last_digit(number_array[0]))
-    elif(len(number_array) < 3): #checks for number in 10 to 99 range
-        print(tens_and_teens(number_array))
-    elif(len(number_array) < 4): #checks for number in 100 to 999 range
-        print(hundreds(number_array))
-    elif(len(number_array) < 7): #checks for number in 1000 to 999 999 range
-        print(thousands(number_array))
-    elif(len(number_array) < 10): #checks for number in 1 000 000 to 999 999 999 range
+    if (len(number_array) < 10): #checks for number in 0 to 9 range
         print(millions(number_array))
     else:
-        print("hit else")
+        print("number to high")
